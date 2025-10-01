@@ -14,9 +14,16 @@ This guide explains how to deploy your Symfony application on [Coolify](https://
    - Navigate to your Coolify dashboard
    - Create a new project from your Git repository
 
-2. **Configure Deployment Settings**
-   - Set the Docker Compose file to: `compose.coolify.yaml`
-   - Coolify will automatically detect and use this file
+2. **⚠️ IMPORTANT: Configure Docker Compose File**
+
+   In Coolify's project settings, you MUST explicitly set the Docker Compose file:
+
+   - Go to your project's configuration/settings
+   - Look for "Docker Compose Location" or "Compose File Path" setting
+   - Set it to: `compose.coolify.yaml`
+   - Save the settings
+
+   **Do not skip this step!** If not set, Coolify will use `compose.yaml` which has incompatible syntax.
 
 3. **Set Environment Variables**
 
@@ -71,16 +78,37 @@ Ensure your domain's DNS A record points to your Coolify server's IP address.
 
 ## Troubleshooting
 
-### Build Fails with "Invalid template" Error
+### ❌ Build Fails with "Invalid template" Error (MOST COMMON ISSUE)
 
 If you see an error like:
 ```
 failed to read /artifacts/.env: Invalid template: "https://${SERVER_NAME:-localhost"
+exit status 1
 ```
 
-This means Coolify is trying to use the wrong compose file. Make sure:
-1. You've set the Docker Compose file to `compose.coolify.yaml` in Coolify's settings
-2. All required environment variables are set in Coolify's UI
+**This is the #1 most common issue.** It means Coolify is reading the wrong compose file.
+
+**Solution:**
+
+1. **Verify Compose File Setting in Coolify:**
+   - Go to your project settings in Coolify
+   - Find the "Docker Compose Location" or "Compose File" field
+   - Ensure it's set to: `compose.coolify.yaml` (not `compose.yaml` or `compose.prod.yaml`)
+   - **Save the settings**
+
+2. **Verify Environment Variables are Set:**
+   - Go to Environment Variables section in Coolify
+   - Ensure all required variables from `.env.coolify.example` are set
+   - Especially: `SERVER_NAME`, `APP_SECRET`, `CADDY_MERCURE_JWT_SECRET`, database credentials
+
+3. **Redeploy:**
+   - After saving the compose file setting and environment variables
+   - Trigger a new deployment
+
+**Why this happens:**
+- The default `compose.yaml` uses bash-style variable substitution like `${VAR:-default}`
+- Coolify's template engine doesn't support this syntax
+- The `compose.coolify.yaml` file uses simple `${VAR}` syntax that Coolify can parse
 
 ### Database Connection Issues
 
