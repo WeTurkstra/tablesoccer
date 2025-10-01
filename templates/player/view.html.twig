@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ player.name }} - Player Stats{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ player.name }}</h1>
+
+    <div class="player-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ player.totalGames }}</div>
+            <div class="stat-label">Total Games</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value wins">{{ player.gamesWon }}</div>
+            <div class="stat-label">Wins</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value losses">{{ player.gamesLost }}</div>
+            <div class="stat-label">Losses</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ player.winRate|number_format(1) }}%</div>
+            <div class="stat-label">Win Rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ player.totalGoalsScored }}</div>
+            <div class="stat-label">Total Goals</div>
+        </div>
+    </div>
+
+    <h2>Recent Games</h2>
+
+    {% if recentGames is empty %}
+        <p class="empty-state">No completed games yet.</p>
+    {% else %}
+        <div class="games-list">
+            {% for game in recentGames %}
+                {% set playerTeam = null %}
+                {% set isWinner = false %}
+                {% for gp in game.gamePlayers %}
+                    {% if gp.player.id == player.id %}
+                        {% set playerTeam = gp.team %}
+                        {% set isWinner = (game.winnerTeam == playerTeam) %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="game-card {% if isWinner %}winner{% else %}loser{% endif %}">
+                    <div class="game-header-row">
+                        <div class="game-date">{{ game.playedAt|date('M j, H:i') }}</div>
+                        {% if isWinner %}
+                            <span class="result-badge win">WIN</span>
+                        {% else %}
+                            <span class="result-badge loss">LOSS</span>
+                        {% endif %}
+                    </div>
+                    <div class="game-score">
+                        <div class="team {% if game.winnerTeam == 1 %}winner{% endif %}">
+                            <div class="team-info">
+                                {% for gp in game.team1Players %}
+                                    <span class="player {% if gp.player.id == player.id %}highlighted{% endif %}">{{ gp.player.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="score">{{ game.team1Score }}{% if game.winnerTeam == 1 %} 🏆{% endif %}</div>
+                        </div>
+                        <div class="vs">vs</div>
+                        <div class="team {% if game.winnerTeam == 2 %}winner{% endif %}">
+                            <div class="team-info">
+                                {% for gp in game.team2Players %}
+                                    <span class="player {% if gp.player.id == player.id %}highlighted{% endif %}">{{ gp.player.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="score">{{ game.team2Score }}{% if game.winnerTeam == 2 %} 🏆{% endif %}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="actions">
+        <a href="{{ path('app_players') }}" class="btn btn-secondary">Back to Players</a>
+        <a href="{{ path('app_home') }}" class="btn btn-secondary">Home</a>
+    </div>
+</div>
+{% endblock %}

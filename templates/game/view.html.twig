@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game Details{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Game Details</h1>
+
+    <div class="game-card">
+        <div class="game-date">{{ game.playedAt|date('Y-m-d H:i') }}</div>
+        {% if game.durationSeconds %}
+            <div class="game-date">Duration: {{ (game.durationSeconds / 60)|round }} minutes</div>
+        {% endif %}
+
+        <div class="game-score">
+            <div class="team {% if game.winnerTeam == 1 %}winner{% endif %}">
+                <strong>Team 1 {% if game.winnerTeam == 1 %}🏆{% endif %}</strong>
+                {% for gp in game.team1Players %}
+                    <span>{{ gp.player.name }} ({{ gp.goalsScored }})</span>
+                {% endfor %}
+                <div class="score">{{ game.team1Score }}</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team {% if game.winnerTeam == 2 %}winner{% endif %}">
+                <strong>Team 2 {% if game.winnerTeam == 2 %}🏆{% endif %}</strong>
+                {% for gp in game.team2Players %}
+                    <span>{{ gp.player.name }} ({{ gp.goalsScored }})</span>
+                {% endfor %}
+                <div class="score">{{ game.team2Score }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="{{ path('app_home') }}" class="btn btn-secondary">Back to Home</a>
+        <a href="{{ path('app_game_new') }}" class="btn btn-primary">New Game</a>
+        <form method="post" action="{{ path('app_game_rematch', {id: game.id}) }}" style="display: inline;">
+            <button type="submit" class="btn btn-primary">Rematch (Same Players)</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

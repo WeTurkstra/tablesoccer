@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Table Soccer Tracker{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>⚽ Table Soccer Tracker</h1>
+
+    <div class="actions">
+        <a href="{{ path('app_game_new') }}" class="btn btn-primary">Start New Game</a>
+        <a href="{{ path('app_players') }}" class="btn btn-secondary">View Players</a>
+        <a href="{{ path('app_games_history') }}" class="btn btn-secondary">Game History</a>
+    </div>
+
+    {% if inProgressGames is not empty %}
+        <section class="games-section">
+            <h2>Games in Progress</h2>
+            {% for game in inProgressGames %}
+                <div class="game-card">
+                    <div class="game-score">
+                        <div class="team">
+                            <strong>Team 1</strong>
+                            {% for gp in game.team1Players %}
+                                <span>{{ gp.player.name }}</span>
+                            {% endfor %}
+                            <div class="score">{{ game.team1Score }}</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <strong>Team 2</strong>
+                            {% for gp in game.team2Players %}
+                                <span>{{ gp.player.name }}</span>
+                            {% endfor %}
+                            <div class="score">{{ game.team2Score }}</div>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_game_play', {id: game.id}) }}" class="btn btn-success">Continue Game</a>
+                </div>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    {% if completedGames is not empty %}
+        <section class="games-section">
+            <h2>Recent Games</h2>
+            <div class="games-list">
+                {% for game in completedGames %}
+                    <div class="game-card completed">
+                        <div class="game-date">{{ game.playedAt|date('M j, H:i') }}</div>
+                        <div class="game-score">
+                            <div class="team {% if game.winnerTeam == 1 %}winner{% endif %}">
+                                <div class="team-info">
+                                    {% for gp in game.team1Players %}
+                                        <span>{{ gp.player.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="score">{{ game.team1Score }}{% if game.winnerTeam == 1 %} 🏆{% endif %}</div>
+                            </div>
+                            <div class="vs">vs</div>
+                            <div class="team {% if game.winnerTeam == 2 %}winner{% endif %}">
+                                <div class="team-info">
+                                    {% for gp in game.team2Players %}
+                                        <span>{{ gp.player.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="score">{{ game.team2Score }}{% if game.winnerTeam == 2 %} 🏆{% endif %}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+</div>
+{% endblock %}

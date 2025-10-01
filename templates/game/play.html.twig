@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game in Progress{% endblock %}
+
+{% block body %}
+<div class="play-container" data-controller="game-tracker" data-game-tracker-game-id-value="{{ game.id }}">
+    {# Team 1 Players - Top #}
+    <div class="team-buttons team-1-buttons">
+        {% for gp in game.team1Players %}
+            <button class="player-button team-1-button" data-action="click->game-tracker#scorePlayerGoal" data-game-player-id="{{ gp.id }}">
+                <div class="player-button-name">{{ gp.player.name }}</div>
+                <div class="player-button-goals" data-game-tracker-target="playerGoals" data-player-id="{{ gp.id }}">{{ gp.goalsScored }}</div>
+            </button>
+        {% endfor %}
+    </div>
+
+    {# Main Scoreboard #}
+    <div class="main-scoreboard">
+        <div class="score-display">
+            <div class="team-score-box team-1-box">
+                <div class="team-label">Team 1</div>
+                <div class="team-score-number" data-game-tracker-target="team1Score">{{ game.team1Score }}</div>
+            </div>
+            <div class="score-separator">-</div>
+            <div class="team-score-box team-2-box">
+                <div class="team-label">Team 2</div>
+                <div class="team-score-number" data-game-tracker-target="team2Score">{{ game.team2Score }}</div>
+            </div>
+        </div>
+        <div class="game-status">First to 10 wins!</div>
+    </div>
+
+    {# Team 2 Players - Bottom #}
+    <div class="team-buttons team-2-buttons">
+        {% for gp in game.team2Players %}
+            <button class="player-button team-2-button" data-action="click->game-tracker#scorePlayerGoal" data-game-player-id="{{ gp.id }}">
+                <div class="player-button-name">{{ gp.player.name }}</div>
+                <div class="player-button-goals" data-game-tracker-target="playerGoals" data-player-id="{{ gp.id }}">{{ gp.goalsScored }}</div>
+            </button>
+        {% endfor %}
+    </div>
+
+    {# Winner Modal #}
+    <div class="winner-modal" data-game-tracker-target="winnerModal" style="display: none;">
+        <div class="winner-content">
+            <h2>🏆 Game Over! 🏆</h2>
+            <div class="winner-announcement" data-game-tracker-target="winnerAnnouncement"></div>
+            <div class="final-score" data-game-tracker-target="finalScore"></div>
+            <div class="modal-actions">
+                <a href="{{ path('app_home') }}" class="btn btn-primary">Back to Home</a>
+                <a href="{{ path('app_game_new') }}" class="btn btn-success">New Game</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

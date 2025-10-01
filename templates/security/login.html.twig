@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="login-container">
+        <h1 class="login-title">Access Required</h1>
+
+        {% if app.request.session.get('auth_error') %}
+            <div class="login-error">
+                {{ app.request.session.get('auth_error') }}
+            </div>
+            {% do app.request.session.remove('auth_error') %}
+        {% endif %}
+
+        <form method="post" action="/login" class="login-form">
+            <div class="login-form-group">
+                <label for="password">Password:</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    autofocus
+                >
+            </div>
+            <button type="submit" class="login-submit">
+                Login
+            </button>
+        </form>
+    </div>
+{% endblock %}

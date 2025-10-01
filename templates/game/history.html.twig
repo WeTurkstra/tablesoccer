@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game History{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Game History</h1>
+
+    <div class="actions">
+        <a href="{{ path('app_home') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+
+    {% if games is empty %}
+        <p class="empty-state">No completed games yet. <a href="{{ path('app_game_new') }}">Start your first game!</a></p>
+    {% else %}
+        <div class="games-list">
+            {% for game in games %}
+                <a href="{{ path('app_game_view', {id: game.id}) }}" class="game-card-link">
+                    <div class="game-card">
+                        <div class="game-date">{{ game.playedAt|date('M j, H:i') }}</div>
+                        <div class="game-score">
+                            <div class="team {% if game.winnerTeam == 1 %}winner{% endif %}">
+                                <div class="team-info">
+                                    {% for gp in game.team1Players %}
+                                        <span class="player">{{ gp.player.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="score">{{ game.team1Score }}{% if game.winnerTeam == 1 %} 🏆{% endif %}</div>
+                            </div>
+                            <div class="vs">vs</div>
+                            <div class="team {% if game.winnerTeam == 2 %}winner{% endif %}">
+                                <div class="team-info">
+                                    {% for gp in game.team2Players %}
+                                        <span class="player">{{ gp.player.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="score">{{ game.team2Score }}{% if game.winnerTeam == 2 %} 🏆{% endif %}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
