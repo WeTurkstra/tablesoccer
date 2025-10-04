@@ -89,6 +89,8 @@ RUN set -eux; \
 # copy sources
 COPY --link . ./
 RUN rm -Rf frankenphp/
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?serverVersion=16&charset=utf8"
+
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
