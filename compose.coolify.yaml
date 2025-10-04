@@ -30,7 +30,7 @@ services:
     ports:
       # HTTP
       - target: 80
-        published: 808080
+        published: 8080
         protocol: tcp
       # HTTPS
       - target: 443
