@@ -13,6 +13,7 @@ services:
       # Server configuration
       SERVER_NAME: ${SERVER_NAME}, php:80
       APP_ENV: prod
+      APP_PORT: ${APP_PORT}
 
       # Security secrets (REQUIRED - set in Coolify)
       APP_SECRET: ${APP_SECRET}
@@ -30,15 +31,15 @@ services:
     ports:
       # HTTP
       - target: 80
-        published: 8080
+        published: ${HTTP_PORT}
         protocol: tcp
       # HTTPS
       - target: 443
-        published: 443
+        published: ${HTTPS_PORT}
         protocol: tcp
       # HTTP/3
       - target: 443
-        published: 443
+        published: ${HTTP3_PORT}
         protocol: udp
 
 volumes:
