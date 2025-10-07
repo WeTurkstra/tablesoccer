@@ -20,11 +20,13 @@
             <div class="team-score-box team-1-box">
                 <div class="team-label">Team 1</div>
                 <div class="team-score-number" data-game-tracker-target="team1Score">{{ game.team1Score }}</div>
+                <button class="team-goal-button team-1-goal" data-action="click->game-tracker#scoreTeamGoal" data-team-number="1">+</button>
             </div>
             <div class="score-separator">-</div>
             <div class="team-score-box team-2-box">
                 <div class="team-label">Team 2</div>
                 <div class="team-score-number" data-game-tracker-target="team2Score">{{ game.team2Score }}</div>
+                <button class="team-goal-button team-2-goal" data-action="click->game-tracker#scoreTeamGoal" data-team-number="2">+</button>
             </div>
         </div>
         <div class="game-status">First to 10 wins!</div>

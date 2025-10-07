@@ -156,6 +156,50 @@ class GameController extends AbstractController
         ]);
     }
 
+    #[Route('/game/{id}/goal/team/{teamNumber}', name: 'app_game_goal_team', methods: ['POST'])]
+    public function goalByTeam(
+        Game $game,
+        int $teamNumber,
+        EntityManagerInterface $em
+    ): Response {
+        if ($game->getStatus() !== 'in_progress') {
+            return $this->json(['error' => 'Game is not in progress'], 400);
+        }
+
+        if ($teamNumber !== 1 && $teamNumber !== 2) {
+            return $this->json(['error' => 'Invalid team number'], 400);
+        }
+
+        // Increment team score without attributing to any player
+        if ($teamNumber === 1) {
+            $game->incrementTeam1Score();
+        } else {
+            $game->incrementTeam2Score();
+        }
+
+        $em->flush();
+
+        // Build response with all player stats
+        $playerStats = [];
+        foreach ($game->getGamePlayers() as $gp) {
+            $playerStats[] = [
+                'id' => $gp->getId(),
+                'playerId' => $gp->getPlayer()->getId(),
+                'playerName' => $gp->getPlayer()->getName(),
+                'team' => $gp->getTeam(),
+                'goals' => $gp->getGoalsScored(),
+            ];
+        }
+
+        return $this->json([
+            'team1Score' => $game->getTeam1Score(),
+            'team2Score' => $game->getTeam2Score(),
+            'status' => $game->getStatus(),
+            'winnerTeam' => $game->getWinnerTeam(),
+            'playerStats' => $playerStats,
+        ]);
+    }
+
     #[Route('/game/{id}/view', name: 'app_game_view')]
     public function view(Game $game): Response
     {

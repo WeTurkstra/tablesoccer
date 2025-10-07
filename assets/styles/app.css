@@ -306,11 +306,13 @@ tbody tr:nth-child(even) {
 .play-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100vh; /* Fallback for older browsers */
+    height: 90dvh; /* Dynamic viewport height - accounts for mobile browser UI */
+    max-height: 100vh; /* Fallback for older browsers */
+    max-height: 90dvh;
     padding: 0;
     margin: 0;
-    overflow: hidden;
+    overflow: auto; /* Allow scrolling if content doesn't fit */
 }
 
 .team-buttons {
@@ -427,6 +429,38 @@ tbody tr:nth-child(even) {
     text-transform: uppercase;
     color: var(--black);
     text-align: center;
+}
+
+.team-goal-button {
+    border: 4px solid var(--black);
+    padding: 0.5rem 1rem;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 3px 3px 0 var(--black);
+    margin-top: 0.5rem;
+}
+
+.team-1-goal {
+    background-color: var(--primary);
+    color: var(--black);
+}
+
+.team-2-goal {
+    background-color: var(--secondary);
+    color: var(--white);
+}
+
+.team-goal-button:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 var(--black);
+}
+
+.team-goal-button:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
 }
 
 /* Winner Modal */
